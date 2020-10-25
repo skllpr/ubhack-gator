@@ -46,8 +46,16 @@ class App extends React.Component {
   handleChangeIncome(event) {
     this.setState({income : event.target.value});
   }
+  handleProbability() {
+    if (this.state.probability > 1) {
+      this.setState({probability: .95});
+    }
+    else if (this.state.probability < 0) {
+      this.setState({probability: .05});
+    }
+  }
+
   handleSubmit(event) {
-    alert('A name was submitted: ' + this.state.age);
     this.setState({responded: true});
     var myHeaders = new Headers();
     myHeaders.append("Authorization", "Bearer z0ibpfCpODHY3nihhDrr5zx05gs9wjTX");
@@ -66,16 +74,16 @@ class App extends React.Component {
   fetch("https://cors-anywhere.herokuapp.com/http://52.254.82.215/api/v1/service/endpoint/score", requestOptions)
     .then(response => response.json())
     .then(result => this.setState({probability: result["Results"]["WebServiceOutput0"][0]["Scored Labels"]}))
+    .then(this.handleProbability())
     .catch(error => console.log('error', error));
-    if (this.state.probability > 1)
-      this.setState({probability: 1});
-    else if (this.state.probability < 1)
-      this.setState({probability: 0});
+
     event.preventDefault();
 
   }
 
   render() {
+    if (this.state.probability > 1 || this.state.probability < 0)
+      this.handleProbability();
     return (
       <>
       <div>
@@ -84,7 +92,7 @@ class App extends React.Component {
           <div className = {"inline"}>
           <p id="test" style ={{color: "white"}} className = {"fade-in"}> Hi...</p> <p style ={{color: "white"}} className = {"fade-in"}> I'm Henry </p>
           </div>
-          <p style = {{color:"white"}} className = {"fade-in2"}>A modern alternative to credit </p>
+          <p style = {{color:"white"}} className = {"fade-in2"}>A modern approach to financial awareness </p>
 
           </div>
         </div>
@@ -95,27 +103,38 @@ class App extends React.Component {
         <p> Are you in one of the following groups? </p>
         </div>
         <ul>
-          <li> Never Owned A Credit Card? </li>
-          <li> Just recently started developing credit? </li>
-          <li> Are looking for a better way to measure your risk? </li>
+          <li> Feeling overwhelmed by uncertain future? </li>
+          <li> Have a deeper insight into your financial risks? </li>
+          <li> Struggling to pay bills? </li>
         </ul>
         <div className = {"centered"}>
-        <p> Meet Henry: A-AI powered tool to help assess your risk of defaulting in the next 2 years </p>
+        <p> Meet Henry: An AI-powered tool to help assess your risk of missing debt payments in the next 2 years </p>
         <br></br>
         </div>
       </div>
       <div className = {'panel3'}>
       <div className = {'panel3inner'}>
-      {this.state.responded ? <>
+      {this.state.responded && this.state.probability > 0 && this.state.probability < 1 ? <>
 
+        {(this.state.probability > .6) ?
+          <p className = {"badCredit"}> Your risk of missing a debt payment is: {Math.trunc(100*this.state.probability)}%. Scroll down for resources to help reduce your risk. </p> :
+
+            this.state.probability < .25 ?
+            <p className = {"goodCredit"}> Your risk of missing a debt payment is: {Math.trunc(100*this.state.probability)}%. Take a look at some helpful resources for financial planning bellow. </p>
+            :
+            <p className = {"okCredit"}> Your risk of missing a debt payment is {Math.trunc(100*this.state.probability)}%. You might find some resources bellow to be useful. </p>
+
+        }
 
         <PieChart
         data={[
-          {title: 'probablilty', value: this.state.probability, color: '#E38627'},
-          {title: 'else', value: (1-this.state.probability), color: '#C13C37'},
+            {title: 'probablilty', value: this.state.probability, color: '#FFCCCB'},
+          {title: 'else', value: (1-this.state.probability), color: '#7FFFD4'},
 
         ]}
         lineWidth = {10}
+        animate = {true}
+        animationDuration = {1500}
         />
          </> :
          <>
@@ -131,26 +150,39 @@ class App extends React.Component {
     <Form.Control value={this.state.age} onChange={this.handleChangeAge} type="number" placeholder="0" />
   </Form.Group>
   <Form.Group controlId="exampleForm.ControlInput3">
-    <Form.Label>Lines of Credit (relatives/family/friends):</Form.Label>
+    <Form.Label>Outside Support (relatives/family/friends):</Form.Label>
     <Form.Control value={this.state.loc} onChange={this.handleChangeLoc} type="number" placeholder="0" />
   </Form.Group>
   <Form.Group controlId="exampleForm.ControlInput4">
-    <Form.Label>Number of Loans:</Form.Label>
+    <Form.Label>Number of Loans (Car/House/Student):</Form.Label>
     <Form.Control value={this.state.loans} onChange={this.handleChangeLoans}  type="number" placeholder="0" />
   </Form.Group>
   <Form.Group controlId="exampleForm.ControlInput4">
-    <Form.Label>Monthly Costs:</Form.Label>
+    <Form.Label>Monthly Expenditure:</Form.Label>
     <Form.Control value={this.state.costs} onChange={this.handleChangeCosts}  type="number" placeholder="0" />
   </Form.Group>
   <Form.Group controlId="exampleForm.ControlInput4">
     <Form.Label>Monthly Income:</Form.Label>
     <Form.Control value={this.state.income} onChange={this.handleChangeIncome} type="number" placeholder="0" />
   </Form.Group>
-  <Button type="submit">Submit form</Button>
+  <Button style = {{backgroundColor: "#7EC8E3", borderColor: "#7EC8E3"}} type="submit">Submit form</Button>
 </Form>
 </>
 }
 </div>
+</div>
+<div className = {"panel4"}>
+<div className = {"panel4inner"}>
+<p className = {"linkTitle"}> Some Useful links </p>
+<a href="https://www3.mtb.com/personal-banking/online-mobile-services/money-smart"><p>M&T Bank's Personal Financial Management Calculator</p></a>
+<a href="https://www.consumer.gov/debt"><p>Federal Trade Commission</p></a>
+<a href="https://www.daveramsey.com/blog/the-truth-about-debt-management"><p>Dave Ramsey on Debt</p></a>
+
+
+</div>
+</div>
+<div className = {"panel5"}>
+Site, Machine Learning Model, Azure Resources by Sohil Kollipara
 </div>
 </>
     );

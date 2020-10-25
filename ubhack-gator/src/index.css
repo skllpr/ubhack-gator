@@ -108,7 +108,7 @@ animation: fadeIn2 ease 6s;
 }
 
 .panel2 {
-  height: 60vh;
+  height: 50vh;
   background-color: white;
   margin: auto;
   margin-left: 30vw;
@@ -122,9 +122,11 @@ animation: fadeIn2 ease 6s;
 .panel3 {
   background-color: #7EC8E3;
   padding-top: 5vh;
+  padding-bottom: 5vh;
 }
 
 .panel3inner {
+  padding: 15px;
   margin-left: 30vw;
   margin-right: 30vw;
   margin-top: 5vh;
@@ -141,3 +143,49 @@ form {
   margin-left: auto;
   margin-right: auto;
 }
+
+.goodCredit {
+  font-weight: bold;
+  color: #7FFFD4;
+
+}
+
+.badCredit {
+  font-weight: bold;
+  color: #FFCCCB;
+}
+
+.panel4 {
+  height: 30vh;
+  padding-top: 5px;
+  text-align: center;
+}
+
+.linkTitle {
+  font-size: 40px;
+
+}
+
+a:link,a:visited {
+   color: Black;
+   background-color: #FFFFFF;
+   text-decoration: none;
+   target-new: none;
+  }
+  a:hover {
+   color: Black;
+   background-color: White;
+   text-decoration: underline;
+   target-new: window;
+  }
+  a {
+    font-size: 150%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  .panel5 {
+    background-color:#7EC8E3;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+  }
