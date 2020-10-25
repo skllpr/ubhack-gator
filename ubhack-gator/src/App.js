@@ -122,9 +122,9 @@ class App extends React.Component {
           <p className = {"badCredit"}> Your risk of missing a debt payment is: {Math.trunc(100*this.state.probability)}%. Scroll down for resources to help reduce your risk. </p> :
 
             this.state.probability < .25 ?
-            <p className = {"goodCredit"}> Your risk of missing a debt payment is: {Math.trunc(100*this.state.probability)}%. Take a look at some helpful resources for financial planning bellow. </p>
+            <p className = {"goodCredit"}> Your risk of missing a debt payment is: {Math.trunc(100*this.state.probability)}%. Take a look at some helpful resources for financial planning below. </p>
             :
-            <p className = {"okCredit"}> Your risk of missing a debt payment is {Math.trunc(100*this.state.probability)}%. You might find some resources bellow to be useful. </p>
+            <p className = {"okCredit"}> Your risk of missing a debt payment is {Math.trunc(100*this.state.probability)}%. You might find some resources below to be useful. </p>
 
         }
 
