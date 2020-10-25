@@ -12,9 +12,13 @@ code {
     monospace;
 }
 
+.preamble {
+  height: 20vh;
+}
+
 .intro {
   display: flex;
-  height: 60vh;
+  height: 40vh;
   background-color: #7EC8E3;
   text-align: center;
   vertical-align: middle;
@@ -153,6 +157,11 @@ form {
 .badCredit {
   font-weight: bold;
   color: #FFCCCB;
+}
+
+.okCredit {
+  font-weight: bold;
+  font-size: 125%;
 }
 
 .panel4 {
