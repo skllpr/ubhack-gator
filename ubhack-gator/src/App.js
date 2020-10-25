@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import {Form, Button} from 'react-bootstrap'
+import { PieChart } from 'react-minimal-pie-chart';
 
 class App extends React.Component {
   constructor(props) {
@@ -11,7 +12,9 @@ class App extends React.Component {
       loc: 0,
       loans: 0,
       costs: 0,
-      income: 0
+      income: 0,
+      responded: false,
+      probability: 0
 
     };
 
@@ -45,10 +48,12 @@ class App extends React.Component {
   }
   handleSubmit(event) {
     alert('A name was submitted: ' + this.state.age);
+    this.setState({responded: true});
     var myHeaders = new Headers();
     myHeaders.append("Authorization", "Bearer z0ibpfCpODHY3nihhDrr5zx05gs9wjTX");
     myHeaders.append("Content-Type", "application/json");
-
+    if (this.state.income === 0)
+      this.setState({income: 1});
   var raw = JSON.stringify({"Inputs":{"WebServiceInput0":[{"ID":9,"SeriousDlqin2yrs":0,"RevolvingUtilizationOfUnsecuredLines":0,"Age":this.state.age,"NumberOfTime30-59DaysPastDueNotWorse":2,"DebtRatio":(this.state.costs/this.state.income),"MonthlyIncome":this.state.income,"NumberOfOpenCreditLinesAndLoans":this.state.loc,"NumberOfTimes90DaysLate":10,"NumberRealEstateLoansOrLines":this.state.loans,"NumberOfTime60-89DaysPastDueNotWorse":0,"NumberOfDependents":this.state.children}]}});
 
   var requestOptions = {
@@ -59,10 +64,15 @@ class App extends React.Component {
   };
 
   fetch("https://cors-anywhere.herokuapp.com/http://52.254.82.215/api/v1/service/endpoint/score", requestOptions)
-    .then(response => response.text())
-    .then(result => console.log(result))
+    .then(response => response.json())
+    .then(result => this.setState({probability: result["Results"]["WebServiceOutput0"][0]["Scored Labels"]}))
     .catch(error => console.log('error', error));
+    if (this.state.probability > 1)
+      this.setState({probability: 1});
+    else if (this.state.probability < 1)
+      this.setState({probability: 0});
     event.preventDefault();
+
   }
 
   render() {
@@ -71,11 +81,46 @@ class App extends React.Component {
       <div>
         <div className = {"intro"}>
           <div className = {"vertically-centered-intro"}>
-          <p id="test" style ={{color: "white"}}> Hi... I'm Henry </p>
+          <div className = {"inline"}>
+          <p id="test" style ={{color: "white"}} className = {"fade-in"}> Hi...</p> <p style ={{color: "white"}} className = {"fade-in"}> I'm Henry </p>
+          </div>
+          <p style = {{color:"white"}} className = {"fade-in2"}>A modern alternative to credit </p>
+
           </div>
         </div>
       </div>
-      <p></p>
+      <br></br>
+      <div className = {"panel2"}>
+        <div className = {"centered"}>
+        <p> Are you in one of the following groups? </p>
+        </div>
+        <ul>
+          <li> Never Owned A Credit Card? </li>
+          <li> Just recently started developing credit? </li>
+          <li> Are looking for a better way to measure your risk? </li>
+        </ul>
+        <div className = {"centered"}>
+        <p> Meet Henry: A-AI powered tool to help assess your risk of defaulting in the next 2 years </p>
+        <br></br>
+        </div>
+      </div>
+      <div className = {'panel3'}>
+      <div className = {'panel3inner'}>
+      {this.state.responded ? <>
+
+
+        <PieChart
+        data={[
+          {title: 'probablilty', value: this.state.probability, color: '#E38627'},
+          {title: 'else', value: (1-this.state.probability), color: '#C13C37'},
+
+        ]}
+        lineWidth = {10}
+        />
+         </> :
+         <>
+         <br></br>
+
       <Form onSubmit={this.handleSubmit}>
   <Form.Group controlId="exampleForm.ControlInput1">
     <Form.Label>Number of Children:</Form.Label>
@@ -103,6 +148,10 @@ class App extends React.Component {
   </Form.Group>
   <Button type="submit">Submit form</Button>
 </Form>
+</>
+}
+</div>
+</div>
 </>
     );
   }
